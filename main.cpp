@@ -6,20 +6,27 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window); 
 
+// screen configs
+const unsigned int SCR_WIDTH=800;
+const unsigned int SCR_HEIGHT=600;
+
 int main(void)
 {
-    // Initializing GLFW
+    // glfw: init and config
+    // ------------------------
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    // Setting up forward compatibility
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    // setting up forward compatibility for mac
+    #ifdef __APPLE__
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    #endif
 
-    // Creating a window obj
-    GLint WIDTH = 800, HEIGHT = 600;
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGLSandbox", NULL, NULL);
+    // glfw: creating window
+    // ------------------------
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "OpenGLSandbox", NULL, NULL);
 
     if (window == NULL) {
         std::cout<<"Failed to create GLFW window"<<std::endl;
@@ -27,41 +34,44 @@ int main(void)
         return -1;
     }
 
-    // Setting main context to the window obj
     glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // Initializing GLAD Loader
+    // glad: loading fuunction pointers
+    // -----------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }   
 
-    // Setting the viewport
-    glViewport(0, 0, WIDTH, HEIGHT);
-
-    // Setting the frame buffer callback
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    // Event loop
+    // render loop
+    // ---------------------------------
     while(!glfwWindowShouldClose(window)) {
         // processing inputs
         processInput(window);
-        
+
+        // render
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // glfw; swap buffers and listen to IO events
         glfwSwapBuffers(window);
-        glfwPollEvents();    
+        glfwPollEvents();
     }  
 
+    // glfw: terminate and clear all allocated resources
+    // -------------------------------------------------
     glfwTerminate();
   
     return 0;
 }
 
-// Framebuffer callback
+// framebuffer callback (window resized)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }  
 
-// Process Input function
+// process all input
 void processInput(GLFWwindow* window) {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
         glfwSetWindowShouldClose(window, true);
