@@ -3,7 +3,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height); 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow* window); 
 
 int main(void)
 {
@@ -20,7 +21,7 @@ int main(void)
     GLint WIDTH = 800, HEIGHT = 600;
     GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGLSandbox", NULL, NULL);
 
-    if (window==NULL) {
+    if (window == NULL) {
         std::cout<<"Failed to create GLFW window"<<std::endl;
         glfwTerminate();
         return -1;
@@ -43,6 +44,9 @@ int main(void)
 
     // Event loop
     while(!glfwWindowShouldClose(window)) {
+        // processing inputs
+        processInput(window);
+        
         glfwSwapBuffers(window);
         glfwPollEvents();    
     }  
@@ -53,7 +57,12 @@ int main(void)
 }
 
 // Framebuffer callback
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }  
+
+// Process Input function
+void processInput(GLFWwindow* window) {
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
+        glfwSetWindowShouldClose(window, true);
+}
