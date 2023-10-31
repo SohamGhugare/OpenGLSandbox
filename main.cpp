@@ -10,7 +10,14 @@ void processInput(GLFWwindow* window);
 const unsigned int SCR_WIDTH=800;
 const unsigned int SCR_HEIGHT=600;
 
-int main(void)
+// vertex shader source
+const char *vertexShaderSource = "#version 330 core\n"
+    "layout (location = 0) in vec3 aPos;\n"
+    "void main() {\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "}\0";
+
+int main()
 {
     // glfw: init and config
     // ------------------------
