@@ -51,6 +51,21 @@ int main()
         return -1;
     }   
 
+    // building and compiling shaders
+    // ------------------------------
+
+    // vector shader
+    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+
+    // checking for shader compile error
+    int success; char infoLog[512];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if(!success){
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout<<"ERROR::SHADER::VECTOR::COMPILATION_FAILED\n"<<infoLog<<std::endl;
+    }
+
     // render loop
     // ---------------------------------
     while(!glfwWindowShouldClose(window)) {
